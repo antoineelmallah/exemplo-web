@@ -45,7 +45,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") long id,
                              @Valid User user,
                              BindingResult result,
