@@ -1,5 +1,6 @@
 package com.example.exemplo_web;
 
+import com.example.exemplo_web.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,8 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -26,6 +27,9 @@ public class HomePageTest {
 
     private WebDriver driver;
 
+    @Autowired
+    private UserService userService;
+
     @LocalServerPort
     private int port;
 
@@ -33,6 +37,7 @@ public class HomePageTest {
     public void setUp() throws MalformedURLException, UnknownHostException {
         ChromeOptions options = new ChromeOptions().addArguments("--headless=new");
         driver = new ChromeDriver(options);
+        userService.reset();
     }
 
     @AfterEach
@@ -96,6 +101,25 @@ public class HomePageTest {
                 "Benja benja@email.com Edit Delete",
                 "Fred fred@email.com Edit Delete",
                 "Other User other.user@email.com Edit Delete");
+
+        assertTableContainsAllUsers(expectedLines);
+    }
+
+    @Test
+    public void deleteUser_shouldNotDisplayDeletedUser() {
+
+        // Perform Selenium request
+        driver.get("http://localhost:" + port);
+
+        // Find and click on "Delete" link for first user
+        driver.findElement(By.cssSelector("a[href='/delete/1']")).click();
+
+        // Assert that new user is present
+        List<String> expectedLines = List.of(
+                "Name Email Action",
+                "Ana ana@email.com Edit Delete",
+                "Benja benja@email.com Edit Delete",
+                "Fred fred@email.com Edit Delete");
 
         assertTableContainsAllUsers(expectedLines);
     }

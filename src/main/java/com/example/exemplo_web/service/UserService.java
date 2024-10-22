@@ -24,6 +24,10 @@ public class UserService {
         ));
     }
 
+    public void reset() {
+        setup();
+    }
+
     public List<User> findAll() {
         return userList;
     }
