@@ -106,7 +106,7 @@ class HomePageTest {
     }
 
     @Test
-    void editUser_shouldModifySpecificUserData() {
+    void editUser_shouldModifySpecificUserData() throws InterruptedException {
 
         // Perform Selenium request
         driver.get("http://localhost:" + port);
@@ -121,14 +121,17 @@ class HomePageTest {
         wait.until(d -> inputName.isDisplayed());
 
         // Insert text on "name" form input
+        inputName.clear();
         inputName.sendKeys("Other User");
 
         // Wait until find form input with id "email"
         WebElement inputEmail = driver.findElement(By.id("email"));
+        inputEmail.clear();
         inputEmail.sendKeys("other.user@email.com");
 
-        // Find and click on "Add User" button
-        driver.findElement(By.xpath("/html/body/form/input[3]")).click();
+        // Find and click on "Update User" button
+        WebElement updateButton = driver.findElement(By.cssSelector("input[type='submit']"));
+        updateButton.click();
 
         // Wait until H2 "Users" shows up on page
         WebElement usersH2 = driver.findElement(By.tagName("h2"));
@@ -172,7 +175,6 @@ class HomePageTest {
         // Extract row text
         List<String> listItems = trs.stream()
                 .map(WebElement::getText)
-                //.peek(System.out::println)
                 .toList();
 
         assertLinesMatch(expected, listItems);

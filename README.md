@@ -12,4 +12,4 @@
   `cd ...../exemplo-web`
 - Run on terminal:
 
-  `./run.sh`
+  `sudo sh run.sh`
